@@ -6,8 +6,6 @@ const {JWT_SECRET} = require("../config");
 const {User, accounts, Accounts} = require("../db");
 const { authMiddleware } = require("../middleware");
 
-
-
 const userValidation = zod.object({
     username : zod.string().email(),
     password : zod.string(),
@@ -60,7 +58,7 @@ userRouter.post("/signUp",async(req,res)=>{
         balance : 1 + Math.floor(Math.random()*10000)
     })
 
-    const token = jwt.sign(userId, JWT_SECRET);
+    const token = jwt.sign({userId}, JWT_SECRET);
     res.status(200).json({
         message : "user Created Successfully",
         token : token
@@ -84,7 +82,8 @@ userRouter.post("/signIn",async (req,res)=>{
     }
 
     const isUser =await User.findOne({
-        username : username
+        username : username,
+        password : password
     })
 
     if(!isUser){
@@ -94,7 +93,7 @@ userRouter.post("/signIn",async (req,res)=>{
     }
 
     const userId = isUser._id;
-    const token = jwt.sign(userId, JWT_SECRET);
+    const token = jwt.sign({userId}, JWT_SECRET);
 
     res.status(200).json({
         token : token

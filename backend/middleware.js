@@ -5,7 +5,7 @@ function authMiddleware(req,res, next){
     const token = req.headers.authorization;
     
     if(!token || !token.startsWith('Bearer ')){
-        return res.status(403).json({})
+        return res.status(403).json({message : "token error"})
     }
 
     const actualToken = token.split(" ")[1]
@@ -17,7 +17,7 @@ function authMiddleware(req,res, next){
         next();
     } 
     catch(err){
-        return res.status(403).json({})
+        return res.status(403).json({message : "validation failed"})
     }
 }
 
